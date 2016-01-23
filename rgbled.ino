@@ -26,11 +26,14 @@ void setup()  {
 void loop()  {
   for (int i = 0; i < 3; i++) {
     // calibrate and scale 0..255 to minvals[i]..255
-    val = (rgb[i] * calibration[i] + minvals[i]) / (255 + minvals[i]) * 255;
+    //val = (rgb[i] * calibration[i] + minvals[i]) / (255 + minvals[i]) * 255;
+    val = rgb[i];
 
-    // perform dither
-    val += (double) random() / 0x7FFFFFFF;
-    analogWrite(pins[i], max(minvals[i], min(floor(val), 255)));
+    // perform dither if value is not an integer
+    if (val - floor(val) == 0) {
+        val += (double) random() / 0x7FFFFFFF;
+    }
+    analogWrite(pins[i], max(0, min(floor(val), 255)));
   }
 }
 
